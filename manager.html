@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manager Dashboard — Tap & Barrel Bridges</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:     #080808;
+    --bg:        #0d0d0d;
+    --card:      #111111;
+    --border:    rgba(255,255,255,0.07);
+    --white:     #f0ece4;
+    --gold:      #c9a96e;
+    --gold-dim:  rgba(201,169,110,0.1);
+    --gold-line: rgba(201,169,110,0.25);
+    --mid:       rgba(240,236,228,0.45);
+    --faint:     rgba(240,236,228,0.15);
+    --red:       #c45a5a;
+    --red-dim:   rgba(196,90,90,0.12);
+    --green:     #6a9e6a;
+    --green-dim: rgba(106,158,106,0.12);
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+  }
+
+  /* LOGIN SCREEN */
+  .login-screen {
+    position: fixed; inset: 0;
+    background: var(--black);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+
+  .login-screen.hidden { display: none; }
+
+  .login-box {
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .login-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .login-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .login-sub {
+    font-size: 12px;
+    color: var(--mid);
+    letter-spacing: 0.08em;
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .login-input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    padding: 14px 18px;
+    outline: none;
+    width: 100%;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+    letter-spacing: 0.1em;
+  }
+
+  .login-input:focus { border-color: var(--gold-line); }
+  .login-input::placeholder { color: rgba(240,236,228,0.2); letter-spacing: 0.05em; }
+
+  .login-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--gold);
+    color: #080808;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 4px;
+  }
+
+  .login-btn:hover { background: #d4b47a; }
+
+  .login-error {
+    font-size: 12px;
+    color: var(--red);
+    text-align: center;
+    margin-top: 12px;
+    letter-spacing: 0.05em;
+    min-height: 18px;
+  }
+
+  /* DASHBOARD */
+  .dashboard { display: none; }
+  .dashboard.visible { display: block; }
+
+  /* TOP NAV */
+  nav {
+    position: sticky;
+    top: 0; z-index: 100;
+    background: rgba(8,8,8,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .nav-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .nav-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--white);
+  }
+
+  .nav-sub {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.7;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .nav-logout {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--faint);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: 'Outfit', sans-serif;
+    transition: color 0.2s;
+    padding: 6px 0;
+  }
+
+  .nav-logout:hover { color: var(--white); }
+
+  /* MAIN CONTENT */
+  .main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  /* STATS ROW */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .stat-value span { font-size: 16px; color: var(--gold); }
+
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mid);
+  }
+
+  /* FILTERS */
+  .filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-right: 4px;
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--mid);
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .filter-btn:hover { border-color: var(--gold-line); color: var(--white); }
+  .filter-btn.active { border-color: var(--gold); background: var(--gold-dim); color: var(--gold); }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--mid);
+  }
+
+  .review-count {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  /* REVIEW CARDS */
+  .reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .review-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+
+  .review-card:hover { border-color: rgba(255,255,255,0.12); }
+
+  .review-card.low-rating {
+    border-left: 2px solid var(--red);
+  }
+
+  .review-card.high-rating {
+    border-left: 2px solid var(--green);
+  }
+
+  .review-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 12px;
+  }
+
+  .review-stars {
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+
+  .review-star {
+    font-size: 15px;
+    color: rgba(255,255,255,0.12);
+  }
+
+  .review-star.filled { color: #FBBC04; }
+
+  .review-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-end;
+  }
+
+  .review-time {
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .review-new {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--gold-dim);
+    color: var(--gold);
+    padding: 2px 8px;
+    border: 1px solid var(--gold-line);
+  }
+
+  .review-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .review-cat {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    color: var(--mid);
+    border-radius: 2px;
+  }
+
+  .review-comment {
+    font-size: 14px;
+    line-height: 1.65;
+    color: rgba(240,236,228,0.7);
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+
+  .review-comment.empty {
+    color: var(--faint);
+    font-style: normal;
+    font-size: 13px;
+  }
+
+  /* CONTACT ROW */
+  .review-contact {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .contact-item:hover { color: var(--gold); }
+
+  .contact-icon {
+    font-size: 13px;
+    opacity: 0.6;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--faint);
+  }
+
+  .empty-state .empty-icon { font-size: 32px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-state p { font-size: 13px; letter-spacing: 0.08em; }
+
+  /* LOADING */
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--mid);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+
+  /* REFRESH BTN */
+  .refresh-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--mid);
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .refresh-btn:hover { border-color: var(--gold-line); color: var(--gold); }
+
+  /* GRAIN */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 999; opacity: 0.4;
+  }
+
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat-value { font-size: 26px; }
+    nav { padding: 0 16px; }
+    .main { padding: 20px 14px 60px; }
+    .review-card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Interform · Manager Portal</div>
+    <h1 class="login-title">Sign in</h1>
+    <p class="login-sub">Tap &amp; Barrel Bridges</p>
+    <input class="login-input" type="password" id="passwordInput"
+      placeholder="Enter password"
+      onkeydown="if(event.key==='Enter') checkPassword()">
+    <button class="login-btn" onclick="checkPassword()">Access Dashboard</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+
+  <nav>
+    <div class="nav-left">
+      <span class="nav-title">Tap &amp; Barrel Bridges</span>
+      <span class="nav-sub">Manager Dashboard</span>
+    </div>
+    <div class="nav-right">
+      <button class="refresh-btn" onclick="loadReviews()">↻ Refresh</button>
+      <button class="nav-logout" onclick="logout()">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotal">—</div>
+        <div class="stat-label">Total reviews</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statAvg">—<span>★</span></div>
+        <div class="stat-label">Avg rating</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statNew" style="color: var(--gold);">—</div>
+        <div class="stat-label">This week</div>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" data-filter="1" onclick="setFilter('1', this)">★ 1</button>
+      <button class="filter-btn" data-filter="2" onclick="setFilter('2', this)">★ 2</button>
+      <button class="filter-btn" data-filter="3" onclick="setFilter('3', this)">★ 3</button>
+      <button class="filter-btn" data-filter="4" onclick="setFilter('4', this)">★ 4</button>
+      <button class="filter-btn" data-filter="5" onclick="setFilter('5', this)">★ 5</button>
+      <button class="filter-btn" data-filter="contact" onclick="setFilter('contact', this)">Has contact</button>
+    </div>
+
+    <!-- REVIEWS LIST -->
+    <div class="section-header">
+      <span class="section-title">Guest Feedback</span>
+      <span class="review-count" id="reviewCount"></span>
+    </div>
+
+    <div class="reviews-list" id="reviewsList">
+      <div class="loading">Loading reviews…</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ──────────────────────────────────────────────────
+  const SUPABASE_URL = 'https://ummpjbwreufxrlsnvycx.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtbXBqYndyZXVmeHJsc252eWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxMTM3NzksImV4cCI6MjA5MTY4OTc3OX0.Z1TbTd-2Ih64feNXCl7jkwog59szTRmWt4ep5SWmjmQ';
+  const PASSWORD     = 'interform2026'; // ← change this to whatever you want
+  // ────────────────────────────────────────────────────────────
+
+  let allReviews = [];
+  let currentFilter = 'all';
+
+  // LOGIN
+  function checkPassword() {
+    const val = document.getElementById('passwordInput').value;
+    if (val === PASSWORD) {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('dashboard').classList.add('visible');
+      loadReviews();
+    } else {
+      document.getElementById('loginError').textContent = 'Incorrect password. Try again.';
+      document.getElementById('passwordInput').value = '';
+    }
+  }
+
+  function logout() {
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('dashboard').classList.remove('visible');
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('loginError').textContent = '';
+  }
+
+  // LOAD REVIEWS
+  async function loadReviews() {
+    document.getElementById('reviewsList').innerHTML = '<div class="loading">Loading reviews…</div>';
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?order=created_at.desc`, {
+      headers: {
+        'apikey':        SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+      }
+    });
+
+    if (!res.ok) {
+      document.getElementById('reviewsList').innerHTML = '<div class="loading">Failed to load. Check connection.</div>';
+      return;
+    }
+
+    allReviews = await res.json();
+    updateStats();
+    renderReviews();
+  }
+
+  // STATS
+  function updateStats() {
+    const total = allReviews.length;
+    const avg = total > 0
+      ? (allReviews.reduce((s, r) => s + (r.rating || 0), 0) / total).toFixed(1)
+      : '—';
+
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const thisWeek = allReviews.filter(r => new Date(r.created_at) > oneWeekAgo).length;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statAvg').innerHTML = avg + '<span>★</span>';
+    document.getElementById('statNew').textContent = thisWeek;
+  }
+
+  // FILTER
+  function setFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderReviews();
+  }
+
+  function getFiltered() {
+    if (currentFilter === 'all') return allReviews;
+    if (currentFilter === 'contact') return allReviews.filter(r => r.email || r.phone);
+    return allReviews.filter(r => r.rating == currentFilter);
+  }
+
+  // RENDER
+  function renderReviews() {
+    const filtered = getFiltered();
+    const list = document.getElementById('reviewsList');
+    document.getElementById('reviewCount').textContent = filtered.length + ' reviews';
+
+    if (filtered.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">✦</div>
+          <p>No reviews match this filter</p>
+        </div>`;
+      return;
+    }
+
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    list.innerHTML = filtered.map(r => {
+      const isNew = new Date(r.created_at) > oneWeekAgo;
+      const isLow = r.rating <= 2;
+      const isHigh = r.rating >= 4;
+      const cardClass = isLow ? 'review-card low-rating' : isHigh ? 'review-card high-rating' : 'review-card';
+
+      // Stars
+      const stars = [1,2,3,4,5].map(n =>
+        `<span class="review-star ${n <= r.rating ? 'filled' : ''}">★</span>`
+      ).join('');
+
+      // Time ago
+      const ago = timeAgo(r.created_at);
+
+      // Categories
+      const cats = r.category
+        ? r.category.split(',').map(c =>
+            `<span class="review-cat">${c.trim()}</span>`
+          ).join('')
+        : '';
+
+      // Comment
+      const comment = r.comment
+        ? `<div class="review-comment">"${r.comment}"</div>`
+        : `<div class="review-comment empty">No comment left</div>`;
+
+      // Contact
+      let contact = '';
+      if (r.email || r.phone) {
+        contact = `<div class="review-contact">`;
+        if (r.email) contact += `<a class="contact-item" href="mailto:${r.email}"><span class="contact-icon">✉</span>${r.email}</a>`;
+        if (r.phone) contact += `<a class="contact-item" href="tel:${r.phone}"><span class="contact-icon">↗</span>${r.phone}</a>`;
+        contact += `</div>`;
+      }
+
+      return `
+        <div class="${cardClass}">
+          <div class="review-top">
+            <div class="review-stars">${stars}</div>
+            <div class="review-meta">
+              ${isNew ? '<span class="review-new">New</span>' : ''}
+              <span class="review-time">${ago}</span>
+            </div>
+          </div>
+          ${cats ? `<div class="review-categories">${cats}</div>` : ''}
+          ${comment}
+          ${contact}
+        </div>`;
+    }).join('');
+  }
+
+  // TIME AGO
+  function timeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins  = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days  = Math.floor(diff / 86400000);
+    if (mins < 1)   return 'Just now';
+    if (mins < 60)  return `${mins}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days < 7)   return `${days}d ago`;
+    return new Date(dateStr).toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+  }
+</script>
+
+</body>
+</html>
