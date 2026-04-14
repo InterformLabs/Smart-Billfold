@@ -70,10 +70,11 @@
   .card-header {
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: center;
     margin-bottom: 24px;
     padding-bottom: 20px;
     border-bottom: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
   }
 
   .avatar {
@@ -360,12 +361,10 @@
 <div class="page">
   <div class="card">
 
-    <!-- HEADER — mimics Google Maps review header -->
+    <!-- HEADER -->
     <div class="card-header">
-      <div class="avatar">G</div>
       <div class="header-info">
         <span class="header-name">Your feedback</span>
-        <span class="header-sub">Private — sent directly to management</span>
       </div>
     </div>
 
@@ -469,12 +468,10 @@
     }
   }
 
-  // CHIPS
+  // CHIPS — multi-select
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', function() {
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-      this.classList.add('selected');
-      selectedCategory = this.dataset.cat;
+      this.classList.toggle('selected');
     });
   });
 
@@ -489,9 +486,11 @@
     btn.disabled = true;
     btn.textContent = 'Sending…';
 
+    const selectedChips = [...document.querySelectorAll('.chip.selected')].map(c => c.dataset.cat);
+
     const payload = {
       rating:   selectedRating,
-      category: selectedCategory || null,
+      category: selectedChips.length > 0 ? selectedChips.join(', ') : null,
       comment:  document.getElementById('comment').value.trim() || null,
       email:    document.getElementById('email').value.trim() || null,
       phone:    document.getElementById('phone').value.trim() || null,
