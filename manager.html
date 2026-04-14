@@ -595,8 +595,10 @@
       ? (allReviews.reduce((s, r) => s + (r.rating || 0), 0) / total).toFixed(1)
       : '—';
 
-    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const thisWeek = allReviews.filter(r => new Date(r.created_at) > oneWeekAgo).length;
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    oneWeekAgo.setHours(0, 0, 0, 0);
+    const thisWeek = allReviews.filter(r => new Date(r.created_at) >= oneWeekAgo).length;
 
     document.getElementById('statTotal').textContent = total;
     document.getElementById('statAvg').innerHTML = avg + '<span>★</span>';
@@ -632,7 +634,9 @@
       return;
     }
 
-    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    oneWeekAgo.setHours(0, 0, 0, 0);
 
     list.innerHTML = filtered.map(r => {
       const isNew = new Date(r.created_at) > oneWeekAgo;
