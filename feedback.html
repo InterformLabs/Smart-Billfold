@@ -384,10 +384,10 @@
   // ── CONFIG ──────────────────────────────────────────────────
   const SUPABASE_URL  = 'https://ummpjbwreufxrlsnvycx.supabase.co';
   const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtbXBqYndyZXVmeHJsc252eWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxMTM3NzksImV4cCI6MjA5MTY4OTc3OX0.Z1TbTd-2Ih64feNXCl7jkwog59szTRmWt4ep5SWmjmQ';
-  const TWILIO_SID    = 'YOUR_TWILIO_SID_HERE';
-  const TWILIO_TOKEN  = 'YOUR_TWILIO_AUTH_TOKEN_HERE';
-  const TWILIO_FROM   = 'YOUR_TWILIO_PHONE_NUMBER_HERE';
-  const MANAGER_PHONE = 'BILLS_PHONE_NUMBER_HERE';
+  const TWILIO_SID    = 'ACe695bee050cca9b50c4444483a042fd8';
+  const TWILIO_TOKEN  = 'b5e41b8071d105649bf7ff5547c4aa8d';
+  const TWILIO_FROM   = '+17403135158';
+  const MANAGER_PHONE = '+16724721633';
   // ────────────────────────────────────────────────────────────
 
   let selectedRating = 0;
@@ -434,7 +434,7 @@
   // SMS via Twilio
   async function sendSMS() {
     const zone = new URLSearchParams(window.location.search).get('zone') || 'Unknown zone';
-    const message = `⚠️ Negative review at Tap & Barrel Bridges. Zone: ${zone}. Rating: ${selectedRating} star${selectedRating > 1 ? 's' : ''}. Check your Interform dashboard.`;
+    const message = `⚠️ Guest has left a negative review! Check your manager console!. Zone: ${zone}. Rating: ${selectedRating} star${selectedRating > 1 ? 's' : ''}. Check your Interform dashboard.`;
 
     const body = new URLSearchParams();
     body.append('To', MANAGER_PHONE);
@@ -457,7 +457,7 @@
 
   // SUBMIT
   async function submitReview() {
-    if (selectedRating === 0) {
+ if (selectedRating <= 3) {
       document.getElementById('errorMsg').classList.add('show');
       return;
     }
