@@ -45,7 +45,6 @@
     pointer-events: none; z-index: 0;
   }
 
-  /* CARD WRAPPER */
   .page {
     position: relative; z-index: 1;
     min-height: 100vh;
@@ -66,7 +65,6 @@
     animation: fadeUp 0.6s ease forwards 0.2s;
   }
 
-  /* HEADER */
   .card-header {
     display: flex;
     align-items: center;
@@ -77,17 +75,6 @@
     text-align: center;
   }
 
-  .avatar {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: var(--gold-dim);
-    border: 1px solid var(--gold-line);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px; color: var(--gold);
-    flex-shrink: 0;
-  }
-
   .header-info { display: flex; flex-direction: column; gap: 2px; }
 
   .header-name {
@@ -95,12 +82,6 @@
     letter-spacing: 0.03em; color: var(--white);
   }
 
-  .header-sub {
-    font-size: 11px; color: var(--mid);
-    letter-spacing: 0.05em;
-  }
-
-  /* RESTAURANT NAME */
   .restaurant-label {
     font-family: 'Cormorant Garamond', serif;
     font-size: 11px;
@@ -117,7 +98,6 @@
     background: var(--gold-line);
   }
 
-  /* STAR RATING */
   .stars-label {
     font-size: 11px;
     letter-spacing: 0.15em;
@@ -156,7 +136,6 @@
 
   .stars-hint.filled { color: var(--gold); }
 
-  /* CATEGORY CHIPS */
   .cat-label {
     font-size: 11px;
     letter-spacing: 0.15em;
@@ -186,18 +165,9 @@
     border-radius: 2px;
   }
 
-  .chip:hover {
-    border-color: var(--gold-line);
-    color: var(--white);
-  }
+  .chip:hover { border-color: var(--gold-line); color: var(--white); }
+  .chip.selected { border-color: var(--gold); background: var(--gold-dim); color: var(--gold); }
 
-  .chip.selected {
-    border-color: var(--gold);
-    background: var(--gold-dim);
-    color: var(--gold);
-  }
-
-  /* COMMENT BOX */
   .comment-label {
     font-size: 11px;
     letter-spacing: 0.15em;
@@ -226,7 +196,6 @@
   textarea::placeholder { color: rgba(240,236,228,0.2); }
   textarea:focus { border-color: var(--gold-line); }
 
-  /* CONTACT FIELDS */
   .contact-wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -267,7 +236,6 @@
   .contact-input::placeholder { color: rgba(240,236,228,0.18); }
   .contact-input:focus { border-color: var(--gold-line); }
 
-  /* SUBMIT */
   .submit-btn {
     width: 100%;
     padding: 16px;
@@ -281,15 +249,12 @@
     border: none;
     cursor: pointer;
     transition: background 0.25s, transform 0.2s;
-    position: relative;
-    overflow: hidden;
   }
 
   .submit-btn:hover { background: #d4b47a; transform: translateY(-1px); }
   .submit-btn:active { transform: scale(0.98); }
   .submit-btn:disabled { background: rgba(201,169,110,0.3); color: rgba(8,8,8,0.5); cursor: not-allowed; transform: none; }
 
-  /* ERROR */
   .error-msg {
     font-size: 12px;
     color: var(--red);
@@ -300,7 +265,6 @@
 
   .error-msg.show { display: block; }
 
-  /* FOOTER */
   .card-footer {
     margin-top: 20px;
     text-align: center;
@@ -312,7 +276,6 @@
     animation: fadeIn 0.6s ease forwards 0.7s;
   }
 
-  /* SUCCESS SCREEN */
   .success {
     position: fixed; inset: 0;
     background: var(--black);
@@ -325,7 +288,6 @@
   }
 
   .success.visible { opacity: 1; pointer-events: all; }
-
   .success-icon { font-size: 40px; margin-bottom: 8px; color: var(--gold); }
 
   .success h2 {
@@ -361,7 +323,6 @@
 <div class="page">
   <div class="card">
 
-    <!-- HEADER -->
     <div class="card-header">
       <div class="header-info">
         <span class="header-name">Your feedback</span>
@@ -370,7 +331,6 @@
 
     <div class="restaurant-label">Tap &amp; Barrel Bridges</div>
 
-    <!-- STAR RATING -->
     <div class="stars-label">Your rating</div>
     <div class="stars" id="stars">
       <span class="star" data-val="1">★</span>
@@ -381,7 +341,6 @@
     </div>
     <div class="stars-hint" id="starsHint">Tap a star to rate</div>
 
-    <!-- CATEGORY -->
     <div class="cat-label">What can we improve?</div>
     <div class="chips" id="chips">
       <button class="chip" data-cat="Food">Food</button>
@@ -391,11 +350,9 @@
       <button class="chip" data-cat="Other">Other</button>
     </div>
 
-    <!-- COMMENT -->
     <div class="comment-label">Tell us more</div>
     <textarea id="comment" placeholder="What could we have done better? Your feedback goes directly to our manager…"></textarea>
 
-    <!-- CONTACT — optional -->
     <div class="contact-wrap">
       <div class="contact-field">
         <label class="contact-label" for="email">Email <span>optional</span></label>
@@ -407,10 +364,8 @@
       </div>
     </div>
 
-    <!-- ERROR -->
     <div class="error-msg" id="errorMsg">Please select a star rating before submitting.</div>
 
-    <!-- SUBMIT -->
     <button class="submit-btn" id="submitBtn" onclick="submitReview()">Submit Feedback</button>
 
   </div>
@@ -418,7 +373,6 @@
   <div class="card-footer">Powered by Interform · interformlabs.com</div>
 </div>
 
-<!-- SUCCESS SCREEN -->
 <div class="success" id="successScreen">
   <div class="success-icon">✦</div>
   <h2>Thank you<br>for your feedback</h2>
@@ -430,10 +384,13 @@
   // ── CONFIG ──────────────────────────────────────────────────
   const SUPABASE_URL  = 'https://ummpjbwreufxrlsnvycx.supabase.co';
   const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtbXBqYndyZXVmeHJsc252eWN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxMTM3NzksImV4cCI6MjA5MTY4OTc3OX0.Z1TbTd-2Ih64feNXCl7jkwog59szTRmWt4ep5SWmjmQ';
+  const TWILIO_SID    = 'YOUR_TWILIO_SID_HERE';
+  const TWILIO_TOKEN  = 'YOUR_TWILIO_AUTH_TOKEN_HERE';
+  const TWILIO_FROM   = 'YOUR_TWILIO_PHONE_NUMBER_HERE';
+  const MANAGER_PHONE = 'BILLS_PHONE_NUMBER_HERE';
   // ────────────────────────────────────────────────────────────
 
-  let selectedRating   = 0;
-  let selectedCategory = '';
+  let selectedRating = 0;
 
   const starLabels = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
 
@@ -444,7 +401,6 @@
       updateStars(selectedRating);
       document.getElementById('errorMsg').classList.remove('show');
     });
-
     star.addEventListener('mouseover', function() {
       updateStars(parseInt(this.dataset.val), true);
     });
@@ -468,12 +424,36 @@
     }
   }
 
-  // CHIPS — multi-select
+  // CHIPS
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', function() {
       this.classList.toggle('selected');
     });
   });
+
+  // SMS via Twilio
+  async function sendSMS() {
+    const zone = new URLSearchParams(window.location.search).get('zone') || 'Unknown zone';
+    const message = `⚠️ Negative review at Tap & Barrel Bridges. Zone: ${zone}. Rating: ${selectedRating} star${selectedRating > 1 ? 's' : ''}. Check your Interform dashboard.`;
+
+    const body = new URLSearchParams();
+    body.append('To', MANAGER_PHONE);
+    body.append('From', TWILIO_FROM);
+    body.append('Body', message);
+
+    try {
+      await fetch(`https://api.twilio.com/2010-04-01/Accounts/${TWILIO_SID}/Messages.json`, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + btoa(`${TWILIO_SID}:${TWILIO_TOKEN}`),
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: body.toString(),
+      });
+    } catch (e) {
+      console.error('SMS error:', e);
+    }
+  }
 
   // SUBMIT
   async function submitReview() {
@@ -487,6 +467,7 @@
     btn.textContent = 'Sending…';
 
     const selectedChips = [...document.querySelectorAll('.chip.selected')].map(c => c.dataset.cat);
+    const zone = new URLSearchParams(window.location.search).get('zone') || null;
 
     const payload = {
       rating:   selectedRating,
@@ -494,6 +475,7 @@
       comment:  document.getElementById('comment').value.trim() || null,
       email:    document.getElementById('email').value.trim() || null,
       phone:    document.getElementById('phone').value.trim() || null,
+      zone:     zone,
     };
 
     try {
@@ -509,6 +491,9 @@
       });
 
       if (res.ok || res.status === 201) {
+        if (selectedRating <= 2) {
+          await sendSMS();
+        }
         document.getElementById('successScreen').classList.add('visible');
       } else {
         const err = await res.text();
